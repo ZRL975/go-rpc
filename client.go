@@ -83,8 +83,9 @@ func (client *Client) terminateCalls(err error) {
 	}
 }
 func (client *Client) receive() {
+
 	var err error
-	for err != nil {
+	for err == nil {
 		var h codec.Header
 		if err = client.cc.ReadHeader(&h); err != nil {
 			break
@@ -175,7 +176,7 @@ func (client *Client) send(call *Call) {
 	}
 	//构建请求头header
 	client.header.ServiceMethod = call.ServiceMethod
-	client.header.Seq = call.Seq
+	client.header.Seq = seq
 	client.header.Error = ""
 	//encode请求并发送，即调用write方法
 	if err := client.cc.Write(&client.header, call.Args); err != nil {

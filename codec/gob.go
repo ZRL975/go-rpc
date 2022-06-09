@@ -36,15 +36,15 @@ func (c *GobCodec) Write(h *Header, body interface{}) (err error) {
 			_ = c.Close()
 		}
 	}()
-	if err = c.enc.Encode(h); err != nil {
-		log.Println("rpc: gob error encoding header:", err)
-		return
+	if err := c.enc.Encode(h); err != nil {
+		log.Println("rpc codec: gob error encoding header:", err)
+		return err
 	}
-	if err = c.enc.Encode(body); err != nil {
-		log.Println("rpc: gob error encoding body:", err)
-		return
+	if err := c.enc.Encode(body); err != nil {
+		log.Println("rpc codec: gob error encoding body:", err)
+		return err
 	}
-	return
+	return nil
 }
 func (c *GobCodec) Close() error {
 	return c.conn.Close()

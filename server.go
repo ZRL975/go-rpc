@@ -97,7 +97,7 @@ func (server *Server) readRequest(cc codec.Codec) (*request, error) {
 	}
 	req := &request{h: h}
 	req.argv = reflect.New(reflect.TypeOf(""))
-	if err = cc.ReadBody(req.replyv.Interface()); err != nil {
+	if err = cc.ReadBody(req.argv.Interface()); err != nil {
 		log.Println("rpc server: read argv err:", err)
 	}
 	return req, nil
@@ -112,6 +112,7 @@ func (server *Server) sendResponse(cc codec.Codec, h *codec.Header, body interfa
 func (server *Server) handlerRequest(cc codec.Codec, req *request, sending *sync.Mutex, wg *sync.WaitGroup) {
 	//todo 根据对应的method进行处理
 	defer wg.Done()
+	log.Println(req.h, req.argv.Elem())
 	req.replyv = reflect.ValueOf(fmt.Sprintf("go-rpc resp %d", req.h.Seq)) //对replyv进行赋值
 	server.sendResponse(cc, req.h, req.replyv.Interface(), sending)
 }
