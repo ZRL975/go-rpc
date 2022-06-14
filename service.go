@@ -10,7 +10,7 @@ import (
 type methodType struct {
 	method    reflect.Method
 	ArgType   reflect.Type
-	ReplyTtpe reflect.Type
+	ReplyType reflect.Type
 	numCalls  uint64
 }
 
@@ -27,12 +27,12 @@ func (m *methodType) newArgv() reflect.Value {
 	return argv
 }
 func (m *methodType) newReplyv() reflect.Value {
-	replyv := reflect.New(m.ReplyTtpe.Elem())
-	switch m.ReplyTtpe.Elem().Kind() {
+	replyv := reflect.New(m.ReplyType.Elem())
+	switch m.ReplyType.Elem().Kind() {
 	case reflect.Map:
-		replyv.Elem().Set(reflect.MakeMap(m.ReplyTtpe.Elem()))
+		replyv.Elem().Set(reflect.MakeMap(m.ReplyType.Elem()))
 	case reflect.Slice:
-		replyv.Elem().Set(reflect.MakeSlice(m.ReplyTtpe.Elem(), 0, 0))
+		replyv.Elem().Set(reflect.MakeSlice(m.ReplyType.Elem(), 0, 0))
 	}
 	return replyv
 }
@@ -73,7 +73,7 @@ func (s *service) registerMethods() {
 		s.method[method.Name] = &methodType{
 			method:    method,
 			ArgType:   argType,
-			ReplyTtpe: replyType,
+			ReplyType: replyType,
 		}
 		log.Printf("rpc server: register %s.%s\n", s.name, method.Name)
 	}
