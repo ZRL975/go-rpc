@@ -16,7 +16,7 @@ type RegistryDiscovery struct {
 
 const defaultUpdateTimeout = time.Second * 10
 
-func NewGeeRegistryDiscovery(registerAddr string, timeout time.Duration) *RegistryDiscovery {
+func NewRegistryDiscovery(registerAddr string, timeout time.Duration) *RegistryDiscovery {
 	if timeout == 0 {
 		timeout = defaultUpdateTimeout
 	}
