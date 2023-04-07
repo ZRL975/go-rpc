@@ -63,10 +63,10 @@ func (r *Registry) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
 		// keep it simple, server is in req.Header
-		w.Header().Set("X-Geerpc-Servers", strings.Join(r.aliveServers(), ","))
+		w.Header().Set("X-Gorpc-Servers", strings.Join(r.aliveServers(), ","))
 	case "POST":
 		// keep it simple, server is in req.Header
-		addr := req.Header.Get("X-Geerpc-Server")
+		addr := req.Header.Get("X-Gorpc-Server")
 		if addr == "" {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -107,7 +107,7 @@ func sendHeartbeat(registry, addr string) error {
 	log.Println(addr, "send heart beat to registry", registry)
 	httpClient := &http.Client{}
 	req, _ := http.NewRequest("POST", registry, nil)
-	req.Header.Set("X-Geerpc-Server", addr)
+	req.Header.Set("X-Gorpc-Server", addr)
 	if _, err := httpClient.Do(req); err != nil {
 		log.Println("rpc server: heart beat err:", err)
 		return err
