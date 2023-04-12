@@ -37,6 +37,7 @@ var DefaultOption = &Option{
 
 type Server struct {
 	serviceMap sync.Map
+	bindAdr    string
 }
 
 func NewServer() *Server {
@@ -193,6 +194,7 @@ func (server *Server) handlerRequest(cc codec.Codec, req *request, sending *sync
 	}
 }
 func (server *Server) Accept(lis net.Listener) {
+	server.bindAdr = lis.Addr().String()
 	for {
 		conn, err := lis.Accept()
 		if err != nil {
@@ -225,11 +227,11 @@ func (server *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	_, _ = io.WriteString(conn, "HTTP/1.0 "+connected+"\n\n")
 	server.serveConn(conn)
 }
-func (server *Server) HandleHTTP() {
+func (server *Server) HandleHTTP(servers []*Server) {
 	http.Handle(defaultRPCPath, server)
-	http.Handle(defaultDebugPath, debugHTTP{server})
+	http.Handle(defaultDebugPath, debugHTTP{servers: servers})
 	log.Println("rpc server debug path:", defaultDebugPath)
 }
-func HandleHTTP() {
-	DefaultServer.HandleHTTP()
+func HandleHTTP(servers []*Server) {
+	DefaultServer.HandleHTTP(servers)
 }

@@ -21,7 +21,7 @@ type ServerItem struct {
 }
 
 const (
-	defaultPath    = "/_gorpc_/registry"
+	defaultPath    = "/rpc/registry"
 	defaultTimeout = time.Minute * 5
 )
 
